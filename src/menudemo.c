@@ -120,6 +120,15 @@ int main() {
             menuIndex = (menuIndex + 1) % 3; // Move down in the menu
         }
 
+        if (button_port_1.b && menuID != 0) {
+            // Back selected
+            menuID = 0; // Return to main menu
+            menuIndex = 0; // Reset menu index for main menu
+            menuText[0] = main_menu_items[0];
+            menuText[1] = main_menu_items[1];
+            menuText[2] = main_menu_items[2];
+        }
+
         if (button_port_1.a) {
             if (play_sfx) {wav64_play(&bop, 31);}
 
