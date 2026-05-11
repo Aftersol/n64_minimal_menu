@@ -1,0 +1,138 @@
+/**
+ * \file menudemo.c
+ * \author Aftersol
+ * \date 2026-05-10
+ * \brief A simple menu example for libdragon.
+ * 
+ * Credits:
+ * - MiaFan2010: You Would Be Here (miafan2010_-_you_would_be_here.xm)
+ *   https://modarchive.org/index.php?request=view_by_moduleid&query=172936
+ * - madameberry: Public Domain Backgrounds - sunset.png
+ *   https://opengameart.org/content/public-domain-backgrounds
+ */
+#include <libdragon.h>
+#include <string.h>
+bool play_sfx = true;
+char main_menu_items [3][32]  = {
+    "Start Game",
+    "Options",
+    "Exit (jk, u can't exit lol)"
+};
+
+char options_menu_items [3][32] = {
+    "Music",
+    "SFX",
+    "Back"
+};
+int main() {
+    int menuIndex = 0, menuID = 0;
+    xm64player_t music;
+    wav64_t bop, bap;
+    char *menuText[3] = {
+        main_menu_items[0],
+        main_menu_items[1],
+        main_menu_items[2]
+    };
+    debug_init_isviewer();
+    debug_init_usblog();
+    dfs_init(DFS_DEFAULT_LOCATION);
+    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
+    joypad_init();
+    rdpq_init();
+    audio_init(44100, 32);
+    mixer_init(32);
+    wav64_open(&bop, "rom:/bop.wav64"); wav64_open(&bap, "rom:/bap.wav64");
+    xm64player_open(&music, "rom:/miafan2010_-_you_would_be_here.xm64");
+    xm64player_set_loop(&music, true);
+    xm64player_play(&music, 0);
+    sprite_t* background = sprite_load("rom:/background.sprite");
+    sprite_t* logo = sprite_load("rom:/logo.sprite");
+
+    rdpq_font_t *font = rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO);
+    rdpq_text_register_font(1, font);
+    while (1) {
+        surface_t* disp;
+
+        char menuTextBuffer[3][64];
+        joypad_buttons_t button_port_1;
+        if (audio_can_write()) {
+			mixer_poll(audio_write_begin(), audio_get_buffer_length());
+			audio_write_end();
+		}
+        while(!(disp = display_try_get())) {;}
+        joypad_poll();
+        button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+        if (button_port_1.d_up || button_port_1.c_up) {
+            if (play_sfx) {wav64_play(&bap, 31);}
+            menuIndex = (menuIndex - 1 + 3) % 3; // Move up in the menu
+        }
+
+        if (button_port_1.d_down || button_port_1.c_down) {
+            if (play_sfx) {wav64_play(&bap, 31);}
+            menuIndex = (menuIndex + 1) % 3; // Move down in the menu
+        }
+
+        if (button_port_1.a) {
+            if (play_sfx) {wav64_play(&bop, 31);}
+
+            switch (menuID) {
+                case 0: // Main Menu
+                    if (menuIndex == 1) {
+                        // Options selected
+                        menuID = 1; // Switch to options menu
+                        menuIndex = 0; // Reset menu index for options
+                        menuText[0] = options_menu_items[0];
+                        menuText[1] = options_menu_items[1];
+                        menuText[2] = options_menu_items[2];
+                    }
+                    break;
+                case 1: // Options Menu
+                    if (menuIndex == 0) {
+                        // Toggle Music
+                        if (music.playing) {
+                            xm64player_stop(&music);
+                        } else {
+                            xm64player_play(&music, 0);
+                        }
+                    }
+                    if (menuIndex == 1) {
+                        // Toggle SFX
+                        play_sfx ^= play_sfx;
+                    } else if (menuIndex == 2) {
+                        // Back selected
+                        menuID = 0; // Return to main menu
+                        menuIndex = 0; // Reset menu index for main menu
+                        menuText[0] = main_menu_items[0];
+                        menuText[1] = main_menu_items[1];
+                        menuText[2] = main_menu_items[2];
+                    }
+                    break;
+            }
+        }
+        rdpq_attach(disp, NULL);
+        rdpq_set_mode_copy(true);
+        rdpq_sprite_blit(background, 0, 0, NULL);
+        rdpq_sprite_blit(logo, (320/2)-(114/2), 32, NULL);
+        rdpq_set_mode_standard();
+        for (int i = 0; i < 3; i++) {
+            if (i == menuIndex) {
+                sprintf(menuTextBuffer[i], "> %s <", menuText[i]);
+            } else {
+                sprintf(menuTextBuffer[i], "  %s  ", menuText[i]);
+            }
+        }
+        rdpq_text_printf(&(rdpq_textparms_t) {
+            .width = 320-32,
+            .align = ALIGN_CENTER,
+            .wrap = WRAP_WORD,
+            }, 1, 16, 128, "%s\n%s\n%s\n",
+            menuTextBuffer[0], 
+            menuTextBuffer[1], 
+            menuTextBuffer[2]);
+        for (int i = 0; i < 3; i++)
+            sys_hw_memset(menuTextBuffer[i], 0, 64);
+
+        rdpq_detach_show();
+
+    }
+}
