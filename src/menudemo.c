@@ -41,6 +41,7 @@
 #include <string.h>
 
 bool play_sfx = true;
+bool play_music = true;
 char main_menu_items [3][256]  = {
     "Start Game",
     "Options",
@@ -48,8 +49,8 @@ char main_menu_items [3][256]  = {
 };
 
 char options_menu_items [3][256] = {
-    "Music",
-    "SFX",
+    "Music - ON",
+    "SFX - ON",
     "Back"
 };
 
@@ -82,7 +83,7 @@ int main() {
 
     joypad_init();
     rdpq_init();
-    audio_init(44100, 32);
+    audio_init(48000, 3);
     mixer_init(32);
 
     wav64_open(&bop, "rom:/bop.wav64"); wav64_open(&bap, "rom:/bap.wav64");
@@ -101,14 +102,11 @@ int main() {
 
         char menuTextBuffer[3][256];
         joypad_buttons_t button_port_1;
-        if (audio_can_write()) {
-			mixer_poll(audio_write_begin(), audio_get_buffer_length());
-			audio_write_end();
-		}
 
         while(!(disp = display_try_get())) {;}
 
         joypad_poll();
+        mixer_try_play();
 
         button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
 
@@ -150,15 +148,29 @@ int main() {
                     {
                             if (menuIndex == 0) {
                             // Toggle Music
-                            if (music.playing) {
-                                xm64player_stop(&music);
+                            if (play_music) {
+                                sys_hw_memset(options_menu_items[0], 0, 256);
+                                sprintf(options_menu_items[0], "Music - OFF");
+                                xm64player_set_vol(&music, 0.0f);
+                                play_music = false;
                             } else {
-                                xm64player_play(&music, 0);
+                                xm64player_set_vol(&music, 1.0f);
+                                sys_hw_memset(menuText[0], 0, 256);
+                                sprintf(options_menu_items[0], "Music - ON");
+                                play_music = true;
                             }
                         }
                         if (menuIndex == 1) {
-                            // Toggle SFX
-                            play_sfx ^= play_sfx;
+                            if (play_sfx) {
+                                sys_hw_memset(options_menu_items[1], 0, 256);
+                                sprintf(options_menu_items[1], "SFX - OFF");
+                                play_sfx = false;
+                            } else {
+                                sys_hw_memset(options_menu_items[1], 0, 256);
+                                sprintf(options_menu_items[1], "SFX - ON");
+                                wav64_play(&bop, 31); // Play a sound to indicate SFX is being turned on
+                                play_sfx = true;
+                            }
                         } else if (menuIndex == 2) {
                             // Back selected
                             menuID = 0; // Return to main menu
