@@ -1,5 +1,5 @@
-# N64 QOI Viewer
-![Pixel art style title screen for a video game or software project featuring the Libdragon logo—a red, stylized dragon curved around the text. Below the logo is a menu with three options: Start Game, Options, and a humorous third line that reads Exit (jk, u can't exit lol). The background is a mosaic of geometric, stained-glass shapes in warm earthy tones fading from olive green at the top to vibrant orange at the bottom.](image.png)
+# N64 Minimal Menu Example
+![A pixelated game title screen featuring the "Libdragon" logo, which consists of a stylized red dragon curling around the black text "Libdragon." Below the logo, a menu set against a low-poly, orange-to-green gradient background displays three options in a white, pixelated font: "Start Game," "Options," and "Credits." The "Start Game" option is highlighted by small arrow cursors on either side.](image.png)
 
 An N64 program that showcases an example of a main menu.
 
