@@ -1,8 +1,33 @@
 /**
  * \file menudemo.c
  * \author Aftersol
- * \date 2026-05-10
+ * \date 2026-05-11
  * \brief A simple menu example for libdragon.
+ * 
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ *
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * For more information, please refer to <https://unlicense.org>
  * 
  * Credits:
  * - MiaFan2010: You Would Be Here (miafan2010_-_you_would_be_here.xm)
@@ -10,20 +35,30 @@
  * - madameberry: Public Domain Backgrounds - sunset.png
  *   https://opengameart.org/content/public-domain-backgrounds
  */
+
 #include <libdragon.h>
+
 #include <string.h>
+
 bool play_sfx = true;
-char main_menu_items [3][32]  = {
+char main_menu_items [3][256]  = {
     "Start Game",
     "Options",
-    "Exit (jk, u can't exit lol)"
+    "Credits"
 };
 
-char options_menu_items [3][32] = {
+char options_menu_items [3][256] = {
     "Music",
     "SFX",
     "Back"
 };
+
+char credits_menu_items [3][256] = {
+    "Programmed by Aftersol",
+    "madameberry - sunset.png, MiaFan2010 - you_would_be_here.xm",
+    "Back"
+};
+
 int main() {
     int menuIndex = 0, menuID = 0;
     xm64player_t music;
@@ -35,33 +70,48 @@ int main() {
     };
     debug_init_isviewer();
     debug_init_usblog();
+
     dfs_init(DFS_DEFAULT_LOCATION);
-    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
+    display_init(
+        RESOLUTION_320x240,
+        DEPTH_16_BPP,
+        2,
+        GAMMA_NONE,
+        FILTERS_DISABLED
+    );
+
     joypad_init();
     rdpq_init();
     audio_init(44100, 32);
     mixer_init(32);
+
     wav64_open(&bop, "rom:/bop.wav64"); wav64_open(&bap, "rom:/bap.wav64");
     xm64player_open(&music, "rom:/miafan2010_-_you_would_be_here.xm64");
     xm64player_set_loop(&music, true);
     xm64player_play(&music, 0);
+
     sprite_t* background = sprite_load("rom:/background.sprite");
     sprite_t* logo = sprite_load("rom:/logo.sprite");
 
     rdpq_font_t *font = rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO);
     rdpq_text_register_font(1, font);
+
     while (1) {
         surface_t* disp;
 
-        char menuTextBuffer[3][64];
+        char menuTextBuffer[3][256];
         joypad_buttons_t button_port_1;
         if (audio_can_write()) {
 			mixer_poll(audio_write_begin(), audio_get_buffer_length());
 			audio_write_end();
 		}
+
         while(!(disp = display_try_get())) {;}
+
         joypad_poll();
+
         button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+
         if (button_port_1.d_up || button_port_1.c_up) {
             if (play_sfx) {wav64_play(&bap, 31);}
             menuIndex = (menuIndex - 1 + 3) % 3; // Move up in the menu
@@ -77,6 +127,7 @@ int main() {
 
             switch (menuID) {
                 case 0: // Main Menu
+                {
                     if (menuIndex == 1) {
                         // Options selected
                         menuID = 1; // Switch to options menu
@@ -85,20 +136,42 @@ int main() {
                         menuText[1] = options_menu_items[1];
                         menuText[2] = options_menu_items[2];
                     }
-                    break;
-                case 1: // Options Menu
-                    if (menuIndex == 0) {
-                        // Toggle Music
-                        if (music.playing) {
-                            xm64player_stop(&music);
-                        } else {
-                            xm64player_play(&music, 0);
-                        }
+                    if (menuIndex == 2) {
+                        // Credits selected
+                        menuID = 2; // Switch to credits menu
+                        menuIndex = 0; // Reset menu index for credits
+                        menuText[0] = credits_menu_items[0];
+                        menuText[1] = credits_menu_items[1];
+                        menuText[2] = credits_menu_items[2];
                     }
-                    if (menuIndex == 1) {
-                        // Toggle SFX
-                        play_sfx ^= play_sfx;
-                    } else if (menuIndex == 2) {
+                    break;
+                }
+                case 1: // Options Menu
+                    {
+                            if (menuIndex == 0) {
+                            // Toggle Music
+                            if (music.playing) {
+                                xm64player_stop(&music);
+                            } else {
+                                xm64player_play(&music, 0);
+                            }
+                        }
+                        if (menuIndex == 1) {
+                            // Toggle SFX
+                            play_sfx ^= play_sfx;
+                        } else if (menuIndex == 2) {
+                            // Back selected
+                            menuID = 0; // Return to main menu
+                            menuIndex = 0; // Reset menu index for main menu
+                            menuText[0] = main_menu_items[0];
+                            menuText[1] = main_menu_items[1];
+                            menuText[2] = main_menu_items[2];
+                        }
+                        break;
+                }
+                case 2:
+                {
+                    if (menuIndex == 2) {
                         // Back selected
                         menuID = 0; // Return to main menu
                         menuIndex = 0; // Reset menu index for main menu
@@ -106,13 +179,15 @@ int main() {
                         menuText[1] = main_menu_items[1];
                         menuText[2] = main_menu_items[2];
                     }
-                    break;
+                }
             }
         }
+
         rdpq_attach(disp, NULL);
         rdpq_set_mode_copy(true);
         rdpq_sprite_blit(background, 0, 0, NULL);
         rdpq_sprite_blit(logo, (320/2)-(114/2), 32, NULL);
+
         rdpq_set_mode_standard();
         for (int i = 0; i < 3; i++) {
             if (i == menuIndex) {
@@ -129,6 +204,7 @@ int main() {
             menuTextBuffer[0], 
             menuTextBuffer[1], 
             menuTextBuffer[2]);
+
         for (int i = 0; i < 3; i++)
             sys_hw_memset(menuTextBuffer[i], 0, 64);
 
