@@ -31,6 +31,7 @@ build
 
 # N64 ROM file type
 *.z64
+*.pak
 
 # Exclude sprite files
 *.sprite
