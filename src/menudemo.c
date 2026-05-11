@@ -55,7 +55,7 @@ char options_menu_items [3][256] = {
 };
 
 char credits_menu_items [3][256] = {
-    "Programmed by Aftersol",
+    "Programming and SFX by Aftersol",
     "madameberry - sunset.png, MiaFan2010 - you_would_be_here.xm",
     "Back"
 };
