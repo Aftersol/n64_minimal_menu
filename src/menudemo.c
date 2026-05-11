@@ -121,6 +121,7 @@ int main() {
         }
 
         if (button_port_1.b && menuID != 0) {
+            if (play_sfx) {wav64_play(&bop, 31);}
             // Back selected
             menuID = 0; // Return to main menu
             menuIndex = 0; // Reset menu index for main menu
