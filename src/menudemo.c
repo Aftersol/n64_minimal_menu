@@ -69,7 +69,7 @@ int main() {
         main_menu_items[1],
         main_menu_items[2]
     };
-    debug_init_isviewer();
+    debug_init_emulog();
     debug_init_usblog();
 
     dfs_init(DFS_DEFAULT_LOCATION);
