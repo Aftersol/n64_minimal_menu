@@ -169,7 +169,7 @@ int main() {
                         }
                         if (menuIndex == 1) { // Toggle SFX
                             sys_hw_memset(options_menu_items[1], 0, 256);
-                            if (play_sfx) { // Disable 
+                            if (play_sfx) { // Disable, no sound as confirmation that sound is off
                                 sprintf(options_menu_items[1], "SFX - OFF");
                                 play_sfx = false;
                             } else {
