@@ -102,14 +102,13 @@ int main() {
         surface_t* disp;
 
         char menuTextBuffer[3][256];
-        joypad_buttons_t button_port_1;
 
         while(!(disp = display_try_get())) {;}
 
         joypad_poll(); // Poll controls for button inputs
         mixer_try_play(); // Required for audio playback
 
-        button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+        joypad_buttons_t button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
 
         if (button_port_1.d_up || button_port_1.c_up || joypad_get_axis_pressed(JOYPAD_PORT_1, JOYPAD_AXIS_STICK_Y) > 0) {
             if (play_sfx) {wav64_play(&bap, 31);}
