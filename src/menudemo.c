@@ -38,7 +38,7 @@
 
 #include <libdragon.h>
 
-#include <string.h>
+#include <stdio.h>
 
 bool play_sfx = true;
 bool play_music = true;
@@ -86,16 +86,17 @@ int main() {
     audio_init(48000, 3);
     mixer_init(32);
 
-    wav64_open(&bop, "rom:/bop.wav64"); wav64_open(&bap, "rom:/bap.wav64");
+    wav64_open(&bop, "rom:/bop.wav64"); // Load audio assets
+    wav64_open(&bap, "rom:/bap.wav64");
     xm64player_open(&music, "rom:/miafan2010_-_you_would_be_here.xm64");
     xm64player_set_loop(&music, true);
     xm64player_play(&music, 0);
 
-    sprite_t* background = sprite_load("rom:/background.sprite");
+    sprite_t* background = sprite_load("rom:/background.sprite"); // Load sprites
     sprite_t* logo = sprite_load("rom:/logo.sprite");
 
     rdpq_font_t *font = rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO);
-    rdpq_text_register_font(1, font);
+    rdpq_text_register_font(1, font); // Load and register fonts
 
     while (1) {
         surface_t* disp;
@@ -105,17 +106,17 @@ int main() {
 
         while(!(disp = display_try_get())) {;}
 
-        joypad_poll();
-        mixer_try_play();
+        joypad_poll(); // Poll controls for button inputs
+        mixer_try_play(); // Required for audio playback
 
         button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
 
-        if (button_port_1.d_up || button_port_1.c_up) {
+        if (button_port_1.d_up || button_port_1.c_up || joypad_get_axis_pressed(JOYPAD_PORT_1, JOYPAD_AXIS_STICK_Y) > 0) {
             if (play_sfx) {wav64_play(&bap, 31);}
             menuIndex = (menuIndex - 1 + 3) % 3; // Move up in the menu
         }
 
-        if (button_port_1.d_down || button_port_1.c_down) {
+        if (button_port_1.d_down || button_port_1.c_down || joypad_get_axis_pressed(JOYPAD_PORT_1, JOYPAD_AXIS_STICK_Y) < 0) {
             if (play_sfx) {wav64_play(&bap, 31);}
             menuIndex = (menuIndex + 1) % 3; // Move down in the menu
         }
@@ -130,9 +131,7 @@ int main() {
             menuText[2] = main_menu_items[2];
         }
 
-        if (button_port_1.a) {
-            if (play_sfx) {wav64_play(&bop, 31);}
-
+        else if (button_port_1.a) {
             switch (menuID) {
                 case 0: // Main Menu
                 {
@@ -156,29 +155,25 @@ int main() {
                 }
                 case 1: // Options Menu
                     {
-                            if (menuIndex == 0) {
-                            // Toggle Music
-                            if (play_music) {
-                                sys_hw_memset(options_menu_items[0], 0, 256);
+                        if (menuIndex == 0) { // Toggle Music
+                            sys_hw_memset(menuText[0], 0, 256);
+                            if (play_music) { // Silence music; music stills plays silently
                                 sprintf(options_menu_items[0], "Music - OFF");
                                 xm64player_set_vol(&music, 0.0f);
                                 play_music = false;
-                            } else {
-                                xm64player_set_vol(&music, 1.0f);
-                                sys_hw_memset(menuText[0], 0, 256);
+                            } else { // Turn the music back on
                                 sprintf(options_menu_items[0], "Music - ON");
+                                xm64player_set_vol(&music, 1.0f);
                                 play_music = true;
                             }
                         }
-                        if (menuIndex == 1) {
-                            if (play_sfx) {
-                                sys_hw_memset(options_menu_items[1], 0, 256);
+                        if (menuIndex == 1) { // Toggle SFX
+                            sys_hw_memset(options_menu_items[1], 0, 256);
+                            if (play_sfx) { // Disable 
                                 sprintf(options_menu_items[1], "SFX - OFF");
                                 play_sfx = false;
                             } else {
-                                sys_hw_memset(options_menu_items[1], 0, 256);
                                 sprintf(options_menu_items[1], "SFX - ON");
-                                wav64_play(&bop, 31); // Play a sound to indicate SFX is being turned on
                                 play_sfx = true;
                             }
                         } else if (menuIndex == 2) {
@@ -193,8 +188,7 @@ int main() {
                 }
                 case 2:
                 {
-                    if (menuIndex == 2) {
-                        // Back selected
+                    if (menuIndex == 2) { // Back selected
                         menuID = 0; // Return to main menu
                         menuIndex = 0; // Reset menu index for main menu
                         menuText[0] = main_menu_items[0];
@@ -203,22 +197,23 @@ int main() {
                     }
                 }
             }
+            if (play_sfx) {wav64_play(&bop, 31);} // Play confirm sound
         }
 
         rdpq_attach(disp, NULL);
         rdpq_set_mode_copy(true);
-        rdpq_sprite_blit(background, 0, 0, NULL);
+        rdpq_sprite_blit(background, 0, 0, NULL); // Draw 2D elements to screen
         rdpq_sprite_blit(logo, (320/2)-(114/2), 32, NULL);
 
         rdpq_set_mode_standard();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) { // Write indicator to text buffer
             if (i == menuIndex) {
                 sprintf(menuTextBuffer[i], "> %s <", menuText[i]);
             } else {
                 sprintf(menuTextBuffer[i], "  %s  ", menuText[i]);
             }
         }
-        rdpq_text_printf(&(rdpq_textparms_t) {
+        rdpq_text_printf(&(rdpq_textparms_t) { // Draw menu text to screen
             .width = 320-32,
             .align = ALIGN_CENTER,
             .wrap = WRAP_WORD,
@@ -227,10 +222,10 @@ int main() {
             menuTextBuffer[1], 
             menuTextBuffer[2]);
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++) // Clear text buffer for next frame
             sys_hw_memset(menuTextBuffer[i], 0, 64);
 
-        rdpq_detach_show();
+        rdpq_detach_show(); // Send the contents of the frame to the screen
 
     }
 }
