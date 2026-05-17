@@ -1,7 +1,7 @@
 /**
  * \file menudemo.c
  * \author Aftersol
- * \date 2026-05-16
+ * \date 2026-05-17
  * \brief A simple menu example for libdragon.
  * 
  * This is free and unencumbered software released into the public domain.
@@ -206,13 +206,9 @@ int main() {
         rdpq_sprite_blit(logo, (320/2)-(114/2), 32, NULL);
 
         rdpq_set_mode_standard();
-        for (int i = 0; i < 3; i++) { // Write indicator to text buffer
-            if (i == menuIndex) {
-                sprintf(menuTextBuffer[i], "> %s <", menuText[i]);
-            } else {
-                sprintf(menuTextBuffer[i], "  %s  ", menuText[i]);
-            }
-        }
+        for (int i = 0; i < 3; i++) // Write indicator to text buffer
+            sprintf(menuTextBuffer[i], (i == menuIndex) ? "> %s <" : "  %s  ", menuText[i]);
+        
         rdpq_text_printf(&(rdpq_textparms_t) { // Draw menu text to screen
             .width = 320-32,
             .align = ALIGN_CENTER,
