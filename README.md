@@ -36,5 +36,6 @@ Everything in the src folder is licensed under The Unlicense. See [LICENSE page]
 In the assets folder the following assets are in the public domain:
 - [bap.wav - Aftersol](./assets/bap.wav)
 - [bop.wav - Aftersol](./assets/bop.wav)
+- [logo.ci4.png - Spooky Илюха and Cedar Branch](https://github.com/DragonMinded/libdragon/wiki/Logos)
 - [miafan2010 - You Would Be Here](https://modarchive.org/index.php?request=view_by_moduleid&query=172936)
 - [madameberry - background.png](https://opengameart.org/content/public-domain-backgrounds)
