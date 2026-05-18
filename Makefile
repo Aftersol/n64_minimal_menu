@@ -38,13 +38,14 @@ all: menudemo.z64
 ASSETS_DIR = assets
 FILESYSTEM_DIR = filesystem
 
-assets = $(ASSETS_DIR)/background.png $(ASSETS_DIR)/logo.png
+assets = $(ASSETS_DIR)/background.png $(ASSETS_DIR)/logo.ci4.png
 assets += $(ASSETS_DIR)/bop.wav64 $(ASSETS_DIR)/bap.wav64
 assets += $(ASSETS_DIR)/miafan2010_-_you_would_be_here.xm64
 
 assets_conv = $(addprefix $(FILESYSTEM_DIR)/,$(notdir $(assets:%.png=%.sprite)))
 
-AUDIOCONV_FLAGS ?=
+WAV64_AUDIOCONV_FLAGS ?= --wav-compress 1,bits=2
+XM64_AUDIOCONV_FLAGS ?= --xm-compress-data 3 --xm-8bit
 MKSPRITE_FLAGS ?=
 
 OBJS = $(BUILD_DIR)/menudemo.o
@@ -58,12 +59,12 @@ $(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/%.png
 $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/%.wav
 	@mkdir -p $(dir $@)
 	@echo "    [AUDIOCONV] $@"
-	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+	@$(N64_AUDIOCONV) $(WAV64_AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.xm64: $(ASSETS_DIR)/%.xm
 	@mkdir -p $(dir $@)
 	@echo "    [AUDIOCONV] $@"
-	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+	@$(N64_AUDIOCONV) $(XM64_AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 
 menudemo.z64: N64_ROM_TITLE="menudemo"
@@ -77,6 +78,9 @@ $(BUILD_DIR)/menudemo.dfs: $(assets_conv)
 
 clean:
 	rm -f $(BUILD_DIR)/* *.z64
+	rm -rf $(BUILD_DIR)
+	rm -rf $(FILESYSTEM_DIR)/*
+	rm -rf $(FILESYSTEM_DIR)
 .PHONY: clean
 
 -include $(wildcard $(BUILD_DIR)/*.d)
