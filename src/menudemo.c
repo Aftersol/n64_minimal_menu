@@ -69,8 +69,11 @@ int main() {
         main_menu_items[1],
         main_menu_items[2]
     };
+
     debug_init_emulog();
     debug_init_usblog();
+
+    asset_init_compression(3);
 
     dfs_init(DFS_DEFAULT_LOCATION);
     display_init(
@@ -83,7 +86,7 @@ int main() {
 
     joypad_init();
     rdpq_init();
-    audio_init(48000, 3);
+    audio_init(22050, 3);
     mixer_init(32);
 
     wav64_open(&bop, "rom:/bop.wav64"); // Load audio assets
@@ -93,7 +96,7 @@ int main() {
     xm64player_play(&music, 0);
 
     sprite_t* background = sprite_load("rom:/background.sprite"); // Load sprites
-    sprite_t* logo = sprite_load("rom:/logo.sprite");
+    sprite_t* logo = sprite_load("rom:/logo.ci4.sprite");
 
     rdpq_font_t *font = rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO);
     rdpq_text_register_font(1, font); // Load and register fonts
@@ -156,25 +159,14 @@ int main() {
                     {
                         if (menuIndex == 0) { // Toggle Music
                             sys_hw_memset(menuText[0], 0, 256);
-                            if (play_music) { // Silence music; music stills plays silently
-                                sprintf(options_menu_items[0], "Music - OFF");
-                                xm64player_set_vol(&music, 0.0f);
-                                play_music = false;
-                            } else { // Turn the music back on
-                                sprintf(options_menu_items[0], "Music - ON");
-                                xm64player_set_vol(&music, 1.0f);
-                                play_music = true;
-                            }
+                            play_music ^= 1;
+                            sprintf(options_menu_items[0], (play_music) ? "Music - ON" : "Music - OFF");
+                            xm64player_set_vol(&music, (play_music) ? 1.0f : 0.0f);
                         }
                         if (menuIndex == 1) { // Toggle SFX
                             sys_hw_memset(options_menu_items[1], 0, 256);
-                            if (play_sfx) { // Disable, no sound as confirmation that sound is off
-                                sprintf(options_menu_items[1], "SFX - OFF");
-                                play_sfx = false;
-                            } else {
-                                sprintf(options_menu_items[1], "SFX - ON");
-                                play_sfx = true;
-                            }
+                            play_sfx ^= 1;
+                            sprintf(options_menu_items[1], (play_sfx) ? "SFX - ON" : "SFX - OFF");
                         } else if (menuIndex == 2) {
                             // Back selected
                             menuID = 0; // Return to main menu
