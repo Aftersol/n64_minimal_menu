@@ -1,8 +1,8 @@
 # N64 Minimal Menu Example
 
-https://github.com/user-attachments/assets/8dddbee1-8e6f-4780-a89a-777cad44b4b8
+https://github.com/user-attachments/assets/21dbfc01-8fab-4bb7-8beb-f1846de273df
 
-![A pixelated game title screen featuring the "Libdragon" logo, which consists of a stylized red dragon curling around the black text "Libdragon." Below the logo, a menu set against a low-poly, orange-to-green gradient background displays three options in a white, pixelated font: "Start Game," "Options," and "Credits." The "Start Game" option is highlighted by small arrow cursors on either side.](image.png)
+![A pixelated game title screen featuring the "Libdragon" logo, which consists of a stylized red dragon curling around the white text "Libdragon." Below the logo, a menu set against a low-poly, orange-to-green gradient background displays three options in a white, pixelated font: "Start Game," "Options," and "Credits." The "Start Game" option is highlighted by small arrow cursors on either side.](image.png)
 
 An N64 program that showcases an example of a main menu.
 
