@@ -30,6 +30,8 @@
  * For more information, please refer to <https://unlicense.org>
  * 
  * Credits:
+ * - Spooky Илюха and Cedar Branch: Libdragon logo
+ *   https://github.com/DragonMinded/libdragon/wiki/Logos
  * - MiaFan2010: You Would Be Here (miafan2010_-_you_would_be_here.xm)
  *   https://modarchive.org/index.php?request=view_by_moduleid&query=172936
  * - madameberry: Public Domain Backgrounds - sunset.png
