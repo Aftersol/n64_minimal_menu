@@ -128,9 +128,8 @@ int main() {
             // Back selected
             menuID = 0; // Return to main menu
             menuIndex = 0; // Reset menu index for main menu
-            menuText[0] = main_menu_items[0];
-            menuText[1] = main_menu_items[1];
-            menuText[2] = main_menu_items[2];
+            for (int i = 0; i < 3; i++)
+                menuText[i] = main_menu_items[i];
         }
 
         else if (button_port_1.a) {
@@ -141,17 +140,15 @@ int main() {
                         // Options selected
                         menuID = 1; // Switch to options menu
                         menuIndex = 0; // Reset menu index for options
-                        menuText[0] = options_menu_items[0];
-                        menuText[1] = options_menu_items[1];
-                        menuText[2] = options_menu_items[2];
+                        for (int i = 0; i < 3; i++)
+                            menuText[i] = options_menu_items[i];
                     }
                     if (menuIndex == 2) {
                         // Credits selected
                         menuID = 2; // Switch to credits menu
                         menuIndex = 0; // Reset menu index for credits
-                        menuText[0] = credits_menu_items[0];
-                        menuText[1] = credits_menu_items[1];
-                        menuText[2] = credits_menu_items[2];
+                        for (int i = 0; i < 3; i++)
+                            menuText[i] = credits_menu_items[i];
                     }
                     break;
                 }
@@ -171,9 +168,8 @@ int main() {
                             // Back selected
                             menuID = 0; // Return to main menu
                             menuIndex = 0; // Reset menu index for main menu
-                            menuText[0] = main_menu_items[0];
-                            menuText[1] = main_menu_items[1];
-                            menuText[2] = main_menu_items[2];
+                            for (int i = 0; i < 3; i++)
+                                menuText[i] = main_menu_items[i];
                         }
                         break;
                 }
@@ -182,9 +178,8 @@ int main() {
                     if (menuIndex == 2) { // Back selected
                         menuID = 0; // Return to main menu
                         menuIndex = 0; // Reset menu index for main menu
-                        menuText[0] = main_menu_items[0];
-                        menuText[1] = main_menu_items[1];
-                        menuText[2] = main_menu_items[2];
+                        for (int i = 0; i < 3; i++)
+                            menuText[i] = main_menu_items[i];
                     }
                 }
             }
