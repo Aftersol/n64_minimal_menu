@@ -31,8 +31,10 @@ libdragon make
 
 ## Licenses
 
-Everything in the src folder is licensed under MIT License. See [LICENSE page](https://github.com/Aftersol/n64_qoi_dec/blob/main/LICENSE) for more info.
+Everything in the src folder is licensed under The Unlicense. See [LICENSE page](https://github.com/Aftersol/n64_minimal_menu/blob/main/LICENSE) for more info.
 
 In the assets folder the following assets are in the public domain:
+- [bap.wav - Aftersol](./assets/bap.wav)
+- [bop.wav - Aftersol](./assets/bop.wav)
 - [miafan2010 - You Would Be Here](https://modarchive.org/index.php?request=view_by_moduleid&query=172936)
 - [madameberry - background.png](https://opengameart.org/content/public-domain-backgrounds)
