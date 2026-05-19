@@ -66,20 +66,23 @@ char credits_menu_items [3][256] = {
 
 int main() {
     int menuIndex = 0, menuID = 0;
-    xm64player_t music;
+    xm64player_t music; // Background Music
     wav64_t bop, bap;
+
+    // For displaying different menu options; default is main menu
     char *menuText[3] = {
         main_menu_items[0],
         main_menu_items[1],
         main_menu_items[2]
     };
 
+    // Start up debug subsystem
     debug_init_emulog();
     debug_init_usblog();
 
-    asset_init_compression(3);
+    asset_init_compression(3); // For compresseed XM file
 
-    dfs_init(DFS_DEFAULT_LOCATION);
+    dfs_init(DFS_DEFAULT_LOCATION); // Start up ROM DFS for loading assets from ROM
     display_init(
         RESOLUTION_320x240,
         DEPTH_16_BPP,
@@ -90,6 +93,8 @@ int main() {
 
     joypad_init();
     rdpq_init();
+
+    // Start up audio subsystem
     audio_init(22050, 3);
     mixer_init(32);
 
@@ -103,12 +108,12 @@ int main() {
     sprite_t* logo = sprite_load("rom:/logo.ci4.sprite");
 
     rdpq_font_t *font = rdpq_font_load_builtin(FONT_BUILTIN_DEBUG_MONO);
-    rdpq_text_register_font(1, font); // Load and register fonts
+    rdpq_text_register_font(1, font); // Load and register default font
 
     while (1) {
         surface_t* disp;
 
-        char menuTextBuffer[3][256];
+        char menuTextBuffer[3][256]; // For text displayed to screen
 
         while(!(disp = display_try_get())) {;}
 
@@ -160,13 +165,13 @@ int main() {
                     {
                         if (menuIndex == 0) { // Toggle Music
                             sys_hw_memset(menuText[0], 0, 256);
-                            play_music ^= 1;
+                            play_music ^= 1; // Use XOR to toggle music
                             sprintf(options_menu_items[0], (play_music) ? "Music - ON" : "Music - OFF");
                             xm64player_set_vol(&music, (play_music) ? 1.0f : 0.0f);
                         }
                         if (menuIndex == 1) { // Toggle SFX
                             sys_hw_memset(options_menu_items[1], 0, 256);
-                            play_sfx ^= 1;
+                            play_sfx ^= 1; // Use XOR to toggle sound
                             sprintf(options_menu_items[1], (play_sfx) ? "SFX - ON" : "SFX - OFF");
                         } else if (menuIndex == 2) {
                             // Back selected
@@ -199,11 +204,11 @@ int main() {
         for (int i = 0; i < 3; i++) // Write indicator to text buffer
             sprintf(menuTextBuffer[i], (i == menuIndex) ? "> %s <" : "  %s  ", menuText[i]);
         
-        rdpq_text_printf(&(rdpq_textparms_t) { // Draw menu text to screen
+        rdpq_text_printf(&(rdpq_textparms_t) { // Draw menu options to screen
             .width = 320-32,
             .align = ALIGN_CENTER,
             .wrap = WRAP_WORD,
-            }, 1, 16, 128, "%s\n%s\n%s\n",
+            }, 1, 16, 128, "%s\n%s\n%s\n", // %s is replaced with menu options automatically
             menuTextBuffer[0], 
             menuTextBuffer[1], 
             menuTextBuffer[2]);
