@@ -1,7 +1,7 @@
 /**
  * \file menudemo.c
  * \author Aftersol
- * \date 2026-05-18
+ * \date 2026-05-19
  * \brief A simple menu example for libdragon.
  * 
  * This is free and unencumbered software released into the public domain.
