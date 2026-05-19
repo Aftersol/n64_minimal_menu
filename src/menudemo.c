@@ -30,6 +30,8 @@
  * For more information, please refer to <https://unlicense.org>
  * 
  * Credits:
+ * - bap.wav - Aftersol
+ * - bop.wav - Aftersol
  * - Spooky Илюха and Cedar Branch: Libdragon logo
  *   https://github.com/DragonMinded/libdragon/wiki/Logos
  * - MiaFan2010: You Would Be Here (miafan2010_-_you_would_be_here.xm)
