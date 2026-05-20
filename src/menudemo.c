@@ -46,6 +46,7 @@
 
 bool play_sfx = true;
 bool play_music = true;
+
 char main_menu_items [3][256]  = {
     "Start Game",
     "Options",
