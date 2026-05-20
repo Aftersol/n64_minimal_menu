@@ -1,7 +1,7 @@
 /**
  * \file menudemo.c
  * \author Aftersol
- * \date 2026-05-19
+ * \date 2026-05-20
  * \brief A simple menu example for libdragon.
  * 
  * This is free and unencumbered software released into the public domain.
@@ -128,17 +128,17 @@ int main() {
         joypad_buttons_t button_port_1 = joypad_get_buttons_pressed(JOYPAD_PORT_1);
 
         if (button_port_1.d_up || button_port_1.c_up || joypad_get_axis_pressed(JOYPAD_PORT_1, JOYPAD_AXIS_STICK_Y) > 0) {
-            wav64_play_if_enabled(play_sfx, &bap, 31);
+            wav64_play_if_enabled(play_sfx, &bap, 31); // play clack sound
             menuIndex = (menuIndex - 1 + 3) % 3; // Move up in the menu
         }
 
         if (button_port_1.d_down || button_port_1.c_down || joypad_get_axis_pressed(JOYPAD_PORT_1, JOYPAD_AXIS_STICK_Y) < 0) {
-            wav64_play_if_enabled(play_sfx, &bap, 31);
+            wav64_play_if_enabled(play_sfx, &bap, 31); // play clack sound
             menuIndex = (menuIndex + 1) % 3; // Move down in the menu
         }
 
         if (button_port_1.b && menuID != 0) {
-            wav64_play_if_enabled(play_sfx, &bop, 31);
+            wav64_play_if_enabled(play_sfx, &bop, 31); // play return sound
             // Back selected
             menuID = 0; // Return to main menu
             menuIndex = 0; // Reset menu index for main menu
@@ -197,7 +197,7 @@ int main() {
                     }
                 }
             }
-            wav64_play_if_enabled(play_sfx, &bop, 31);
+            wav64_play_if_enabled(play_sfx, &bop, 31); // play confirm sound
         }
 
         rdpq_attach(disp, NULL);
