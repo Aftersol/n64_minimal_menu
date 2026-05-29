@@ -60,7 +60,7 @@ $(FILESYSTEM_DIR)/background.sprite: $(ASSETS_DIR)/background.png
 	@mkdir -p $(FILESYSTEM_DIR)
 	@mkdir -p $(dir $@)
 	@echo "    [SPRITE] $@"
-	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) --lossy 75 -o $(FILESYSTEM_DIR) "$<"
+	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) --lossy 85 -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/%.wav
 	@mkdir -p $(dir $@)
