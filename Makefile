@@ -46,7 +46,7 @@ assets_conv = $(addprefix $(FILESYSTEM_DIR)/,$(notdir $(assets:%.png=%.sprite)))
 
 WAV64_AUDIOCONV_FLAGS ?= --wav-compress 1,bits=2
 XM64_AUDIOCONV_FLAGS ?= --xm-compress-data 3 --xm-8bit
-MKSPRITE_FLAGS ?=
+MKSPRITE_FLAGS ?= --lossy 75
 
 OBJS = $(BUILD_DIR)/menudemo.o
 
@@ -55,13 +55,6 @@ $(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/%.png
 	@mkdir -p $(dir $@)
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(FILESYSTEM_DIR) "$<"
-
-$(FILESYSTEM_DIR)/background.sprite: $(ASSETS_DIR)/background.png
-	@mkdir -p $(FILESYSTEM_DIR)
-	@mkdir -p $(dir $@)
-	@rm -f $(FILESYSTEM_DIR)/background.sprite
-	@echo "    [SPRITE] $@"
-	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) --lossy 50 -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/%.wav
 	@mkdir -p $(dir $@)
