@@ -46,7 +46,7 @@ assets_conv = $(addprefix $(FILESYSTEM_DIR)/,$(notdir $(assets:%.png=%.sprite)))
 
 WAV64_AUDIOCONV_FLAGS ?= --wav-compress 1,bits=2
 XM64_AUDIOCONV_FLAGS ?= --xm-compress-data 3 --xm-8bit
-MKSPRITE_FLAGS ?=
+MKSPRITE_FLAGS ?= --lossy 75
 
 OBJS = $(BUILD_DIR)/menudemo.o
 
