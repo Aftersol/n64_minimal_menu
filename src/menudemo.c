@@ -1,7 +1,7 @@
 /**
  * \file menudemo.c
  * \author Aftersol
- * \date 2026-05-20
+ * \date 2026-05-29
  * \brief A simple menu example for libdragon.
  * 
  * This is free and unencumbered software released into the public domain.
@@ -109,6 +109,8 @@ int main() {
     xm64player_open(&music, "rom:/miafan2010_-_you_would_be_here.xm64");
     xm64player_set_loop(&music, true);
     xm64player_play(&music, 0);
+
+    lossysprite_init();
 
     sprite_t* background = sprite_load("rom:/background.sprite"); // Load sprites
     sprite_t* logo = sprite_load("rom:/logo.ci4.sprite");
