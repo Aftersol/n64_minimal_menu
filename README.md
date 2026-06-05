@@ -8,7 +8,7 @@ An N64 program that showcases an example of a main menu.
 
 ## How to Build N64 Minimal Menu Example
 This tutorial assumes you have your N64 Toolchain set up including GCC for MIPS.
-Make sure you are on the preview branch of libdragon.
+Make sure you are on [the preview branch of libdragon.](https://github.com/DragonMinded/libdragon/tree/preview)
 
 Clone this repository with `--recurse-submodules` or if you haven't run:
 
